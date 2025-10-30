@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Streamy</title>
+    <link rel="stylesheet" href="/static/mainstyles.css">
+</head>
+<body>
+    <header>
+        <h1>Streamy</h1>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('Movies')">Movies</div>
+        <div class="tab" onclick="openTab('TV Shows')">TV Shows</div>
+        <div class="tab" onclick="openTab('Other')">Other</div>
+    </div>
+
+    <!-- Movies tab content -->
+    <div id="movies" class="tab-content">
+        <ul>
+            {{range .Movies}}
+                <li><a class="video-link" href="/movie/{{.}}">{{.}}</a></li>
+            {{else}}
+                <li>No movies found</li>
+            {{end}}
+        </ul>
+    </div>
+
+    <!-- TV Shows tab content -->
+    <div id="tvshows" class="tab-content" style="display:none;">
+        <ul>
+            {{range .TVShows}}
+                <li><a class="video-link" href="/shows/{{.}}">{{.}}</a></li>
+            {{else}}
+                <li>No TV shows found</li>
+            {{end}}
+        </ul>
+    </div>
+
+    <!-- Other tab content -->
+    <div id="other" class="tab-content" style="display:none;">
+        <ul>
+            {{range .Other}}
+                <li><a class="video-link" href="/movie/{{.}}">{{.}}</a></li>
+            {{else}}
+                <li>No other media found</li>
+            {{end}}
+        </ul>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.style.display = 'none');
+
+            // Remove 'active' class from all tab buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show the selected tab content
+            let tabId = tabName.toLowerCase().replace(/\s/g, ''); // convert "TV Shows" -> "tvshows"
+            document.getElementById(tabId).style.display = 'block';
+
+            // Add 'active' class to the clicked tab
+            const clickedTab = Array.from(tabs).find(tab => tab.textContent === tabName);
+            if (clickedTab) clickedTab.classList.add('active');
+        }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #141414;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 2em;
+    color: #E50914;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+header nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 25px;
+}
+
+header nav a:hover {
+    color: #E50914;
+    text-shadow: 0 0 5px #E50914;
+}
+
+/* Video player container */
+.video-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+video {
+    width: 80%;
+    border-radius: 10px;
+    outline: none;
+}
+
+/* Current video info (under video, left-aligned) */
+.current-info {
+    color: #FFFFFF;
+    font-size: 1.5em;
+    margin: 5px 0 50px 10%;
+}

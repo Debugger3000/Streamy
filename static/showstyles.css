@@ -1,0 +1,126 @@
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #141414;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    /* position: sticky; */
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 2em;
+    color: #E50914;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+header nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 25px;
+}
+
+header nav a:hover {
+    color: #E50914;
+    text-shadow: 0 0 5px #E50914;
+}
+
+/* Video player container */
+.video-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+video {
+    width: 80%;
+    border-radius: 10px;
+    outline: none;
+}
+
+/* Current video info (under video, left-aligned) */
+.current-info {
+    color: #FFFFFF;
+    font-size: 1em;
+    margin: 5px 0 15px 10%;
+}
+
+#show-title {
+    margin: 5px 0 5px 0;
+    font-size: 1.5em;
+}
+
+#season-info {
+    margin: 5px 0 5px 0;
+}
+
+/* Season tabs */
+.tab-bar {
+    display: flex;
+    gap: 10px;
+    margin-left: 10%;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    background: #1E1E1E;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;      /* slightly bigger padding for balance */
+    color: #E0E0E0;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;       /* <-- bigger text */
+    transition: background 0.2s ease;
+}
+
+.tab:hover, .tab.active {
+    background: #FF6F61;
+    color: white;
+}
+
+/* Episodes cards */
+.episodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-left: 10%;
+    margin-bottom: 50px;
+}
+
+.episode-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1E1E1E;
+    border-radius: 10px;
+    width: 180px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.episode-card:hover {
+    transform: scale(1.03);
+    background: #2a2a2a;
+}
+
+.episode-title {
+    font-size: 0.95em;
+    color: #FFB86C;
+    text-align: center;
+}

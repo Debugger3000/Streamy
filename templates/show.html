@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{.ShowName}}</title>
+<link rel="stylesheet" href="/static/showstyles.css">
+</head>
+<body>
+<header>
+    <h1>Streamy</h1>
+    <nav>
+        <a href="/">Home</a>
+    </nav>
+</header>
+
+<!-- Video Player -->
+<div class="video-container">
+    <video id="player" controls autoplay>
+        <source id="video-source" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<!-- Current playing info -->
+<div class="current-info" id="current-info">
+    <h4 id="show-title">{{.ShowName}}</h4>
+    <h4 id="season-info" >Season 1 - Episode 1</h4>
+
+</div>
+
+<!-- Season Tabs -->
+<div class="tab-bar">
+    {{range $i, $s := .Content}}
+        <button class="tab" id="tab-{{$s.Season}}" onclick="showSeason({{$s.Season}})">
+            Season {{$s.Season}}
+        </button>
+    {{end}}
+</div>
+
+<!-- Episodes Cards -->
+{{range $i, $s := .Content}}
+<div class="episodes" id="season-{{$s.Season}}">
+    {{range $ep := $s.Episodes}}
+        <div class="episode-card"
+             onclick="playEpisode('/media/shows/{{$.ShowName}}/Season {{$s.Season}}/{{$ep.FileName}}{{$ep.Extension}}', {{$s.Season}}, '{{$ep.FileName}}')">
+            <div class="episode-title">{{$ep.FileName}}</div>
+        </div>
+    {{end}}
+</div>
+{{end}}
+
+<script>
+const player = document.getElementById("player");
+const videoSource = document.getElementById("video-source");
+const seasonInfo = document.getElementById("season-info");
+// const episodeInfo = document.getElementById("episode-info");
+
+function playEpisode(url, seasonNum, epTitle) {
+    videoSource.src = url;
+    player.load();
+    player.play();
+    seasonInfo.textContent = `Season ${seasonNum} • ${epTitle}`;
+}
+
+function showSeason(num) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + num).classList.add('active');
+
+    document.querySelectorAll('.episodes').forEach(e => e.style.display = 'none');
+    document.getElementById('season-' + num).style.display = 'flex';
+}
+
+// Default open first season and first episode
+window.addEventListener('DOMContentLoaded', () => {
+    const firstTab = document.querySelector('.tab');
+    if (firstTab) {
+        firstTab.classList.add('active');
+        const firstSeason = firstTab.id.split('-')[1];
+        showSeason(firstSeason);
+
+        const firstEpisode = document.querySelector(`#season-${firstSeason} .episode-card`);
+        if (firstEpisode) {
+            const epTitle = firstEpisode.querySelector('.episode-title').textContent;
+            const url = firstEpisode.getAttribute('onclick').match(/'(.*?)'/)[1];
+            playEpisode(url, firstSeason, epTitle);
+        }
+    }
+});
+</script>
+</body>
+</html>

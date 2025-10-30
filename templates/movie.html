@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Filename}}</title>
+    <link rel="stylesheet" href="/static/moviestyles.css">
+</head>
+<body>
+<header>
+    <h1>Streamy</h1>
+    <nav>
+        <a href="/">Home</a>
+    </nav>
+</header>
+
+<!-- Video + Info Wrapper -->
+
+    <div class="video-container">
+        <video id="player" controls autoplay>
+            <source src="/media/movies/{{.Filename}}.{{.Extension}}" type="video/{{.Extension}}">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Movie info (aligned with video) -->
+    <div class="current-info">
+        <strong>{{.Filename}}</strong>
+    </div>
+
+
+</body>
+</html>
