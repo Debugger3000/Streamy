@@ -23,9 +23,29 @@
 
 <!-- Current playing info -->
 <div class="current-info" id="current-info">
-    <h4 id="show-title">{{.ShowName}}</h4>
-    <h4 id="season-info" >Season 1 - Episode 1</h4>
 
+    <div id="poster-container">
+        <img id="poster" src="{{.Poster}}">
+    </div>
+
+    <div id="show-info">
+        <h4 id="show-title">{{.ShowName}}</h4>
+        <h4 class="season-info">Season 1 - Episode 1</h4>
+        <div class="row">
+            <h4 class="season-info">{{.Genre}} &bull;</h4>
+            <h4 class="season-info">{{.Rated}} &bull;</h4>
+            <h4 class="season-info">{{.Released}} &bull;</h4>
+            <h4 class="season-info">{{.Year}} &bull;</h4>
+        </div>
+        <h4 class="season-info">Director: {{.Director}}</h4>
+        <h4 class="season-info">Actors: {{.Actors}}</h4>
+        <h4 class="season-info">Plot: {{.Plot}}</h4>
+
+
+        
+    </div>
+
+    
 </div>
 
 <!-- Season Tabs -->

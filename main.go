@@ -10,6 +10,10 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"streamy/router"
+
+	"github.com/joho/godotenv"
 )
 
 // ffmpeg -i "C:\path\to\video.mkv" -c copy "C:\path\to\video.mp4"
@@ -62,12 +66,31 @@ type Episode struct {
 type ShowPageData struct {
 	ShowName string
 	Content  []SeasonStruct
+	Title    string
+	Released string // first release
+	Year     string
+	Rated    string
+	Genre    string
+	Director string
+	Actors   string
+	Plot     string
+	Poster   string
 }
 
 // ------------------------------------------
 
 // main function
 func main() {
+
+	// Load .env file so env vars become available to os.Getenv
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("No .env file found, continuing...")
+	}
+
+	// variables
+	var port = os.Getenv("PORT")
+
 	fmt.Println("Running main")
 
 	http.HandleFunc("/test", handler)
@@ -153,10 +176,22 @@ func main() {
 			return
 		}
 
+		series := router.GetSeriesInfo(parts[2])
+		fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", series.Title, series.Released, series.Actors, series.Plot)
+
 		showName := parts[2]
 
 		showData := ShowPageData{
 			ShowName: showName,
+			Title:    series.Title,
+			Released: series.Released,
+			Year:     series.Year,
+			Rated:    series.Rated,
+			Genre:    series.Genre,
+			Director: series.Director,
+			Actors:   series.Actors,
+			Plot:     series.Plot,
+			Poster:   series.Poster,
 		}
 
 		// iterate through season folders and build season objects with string array of episode file names
@@ -205,13 +240,14 @@ func main() {
 				})
 			}
 		}
+
 		fmt.Println(showData)
 		showPage.Execute(w, showData)
 	})
 	// -----------------------------------
 
-	err := http.ListenAndServe("0.0.0.0:3030", nil)
-	if err != nil {
+	error := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil)
+	if error != nil {
 		log.Fatal(err)
 	}
 }

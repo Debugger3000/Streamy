@@ -16,7 +16,7 @@
 <!-- Video + Info Wrapper -->
 
     <div class="video-container">
-        <video id="player" controls autoplay>
+        <video id="player" controls autoplay preload="metadata" width="100%">
             <source src="/media/movies/{{.Filename}}.{{.Extension}}" type="video/{{.Extension}}">
             Your browser does not support the video tag.
         </video>
