@@ -19,6 +19,11 @@ import (
 // ffmpeg -i "C:\path\to\video.mkv" -c copy "C:\path\to\video.mp4"
 // to convert a .mkv into a .mp4 for html video compatibility
 
+// encoding for mobile friendly + desktop
+// ffmpeg -i input.mp4 -c:v libx264 -pix_fmt yuv420p -crf 23 -preset fast -c:a aac -b:a 128k output.mp4
+// h264_nvenc
+// in place of 'libx264', since this one uses CPU and the other uses GPU
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, this is the Streamy server!")
 }
