@@ -17,6 +17,7 @@
 <div class="video-container">
     <video id="player" controls autoplay>
         <source id="video-source" src="" type="video/mp4">
+        <track id="video-subtitle" src="" kind="subtitles" srclang="en" label="English" default>
         Your browser does not support the video tag.
     </video>
 </div>
@@ -51,7 +52,7 @@
 <!-- Season Tabs -->
 <div class="tab-bar">
     {{range $i, $s := .Content}}
-        <button class="tab" id="tab-{{$s.Season}}" onclick="showSeason({{$s.Season}})">
+        <button class="tab" id="tab-{{$s.Season}}" onclick="showSeason('{{$s.Season}}')">
             Season {{$s.Season}}
         </button>
     {{end}}
@@ -60,9 +61,11 @@
 <!-- Episodes Cards -->
 {{range $i, $s := .Content}}
 <div class="episodes" id="season-{{$s.Season}}">
+    {{ $showName := $.ShowName }}
+    {{ $season := $s.Season }}
     {{range $ep := $s.Episodes}}
         <div class="episode-card"
-             onclick="playEpisode('/media/shows/{{$.ShowName}}/Season {{$s.Season}}/{{$ep.FileName}}{{$ep.Extension}}', {{$s.Season}}, '{{$ep.FileName}}')">
+            onclick="playEpisode('{{$showName}}', '{{$season}}', '{{$ep.FileName}}', '{{$ep.Extension}}')">
             <div class="episode-title">{{$ep.FileName}}</div>
         </div>
     {{end}}
@@ -72,14 +75,24 @@
 <script>
 const player = document.getElementById("player");
 const videoSource = document.getElementById("video-source");
+const videoSubtitles = document.getElementById("video-subtitle");
 const seasonInfo = document.getElementById("season-info");
 // const episodeInfo = document.getElementById("episode-info");
 
-function playEpisode(url, seasonNum, epTitle) {
-    videoSource.src = url;
+function playEpisode(showName, season, fileName, extension) {
+    console.log(showName,season,fileName,extension);
+    const videoUrl = `/media/shows/${showName}/Season ${season}/${fileName}${extension}`;
+    console.log(videoUrl);
+    videoSource.src = videoUrl;
     player.load();
     player.play();
-    seasonInfo.textContent = `Season ${seasonNum} • ${epTitle}`;
+    //seasonInfo.textContent = `Season ${season} • ${fileName}`;
+    
+    // get subtitles into track if there are any that match episode name
+
+    videoSubtitles.src = `/media/shows/${showName}/Season ${season}/subs/${fileName}.vtt`;
+    console.log(videoSubtitles);
+
 }
 
 function showSeason(num) {
@@ -102,7 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (firstEpisode) {
             const epTitle = firstEpisode.querySelector('.episode-title').textContent;
             const url = firstEpisode.getAttribute('onclick').match(/'(.*?)'/)[1];
-            playEpisode(url, firstSeason, epTitle);
+            //playEpisode(url, firstSeason, epTitle);
+
         }
     }
 });

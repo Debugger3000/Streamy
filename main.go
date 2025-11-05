@@ -174,7 +174,7 @@ func main() {
 	})
 
 	http.HandleFunc("/shows/", func(w http.ResponseWriter, r *http.Request) {
-		// URL path: /movie/{movieName}
+		// URL path: 
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) < 3 || parts[2] == "" {
 			http.Error(w, "Show not specified", http.StatusBadRequest)

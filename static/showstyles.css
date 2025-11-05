@@ -149,6 +149,8 @@ video {
 /* Episodes cards */
 .episodes {
     display: flex;
+    flex-wrap: wrap;
+    /* width: 100%; */
     margin: 5px 10% 15px 10%;
     /* flex-wrap: wrap; */
     gap: 15px;
@@ -161,7 +163,7 @@ video {
     align-items: center;
     background: #1E1E1E;
     border-radius: 10px;
-    width: 250px;
+    width: 200px;
     padding: 20px 10px;
     cursor: pointer;
     transition: transform 0.2s, background 0.2s;
