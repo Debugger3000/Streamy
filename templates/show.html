@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>{{.ShowName}}</title>
+<title>{{.Title}}</title>
 <link rel="stylesheet" href="/static/showstyles.css">
 </head>
 <body>
@@ -30,8 +30,8 @@
     </div>
 
     <div id="show-info">
-        <h4 id="show-title">{{.ShowName}}</h4>
-        <h4 class="season-info">Season 1 - Episode 1</h4>
+        <h4 id="show-title">{{.Title}}</h4>
+        <h4 class="season-info" id="current-episode">Season 1 - Episode 1</h4>
         <div class="row">
             <h4 class="season-info">{{.Genre}} &bull;</h4>
             <h4 class="season-info">{{.Rated}} &bull;</h4>
@@ -61,11 +61,11 @@
 <!-- Episodes Cards -->
 {{range $i, $s := .Content}}
 <div class="episodes" id="season-{{$s.Season}}">
-    {{ $showName := $.ShowName }}
+    {{ $title := $.Title }}
     {{ $season := $s.Season }}
     {{range $ep := $s.Episodes}}
         <div class="episode-card"
-            onclick="playEpisode('{{$showName}}', '{{$season}}', '{{$ep.FileName}}', '{{$ep.Extension}}')">
+            onclick="playEpisode('{{$title}}', '{{$season}}', '{{$ep.FileName}}', '{{$ep.Extension}}')">
             <div class="episode-title">{{$ep.FileName}}</div>
         </div>
     {{end}}
@@ -77,20 +77,24 @@ const player = document.getElementById("player");
 const videoSource = document.getElementById("video-source");
 const videoSubtitles = document.getElementById("video-subtitle");
 const seasonInfo = document.getElementById("season-info");
+const curEpisode = document.getElementById("current-episode");
 // const episodeInfo = document.getElementById("episode-info");
 
-function playEpisode(showName, season, fileName, extension) {
-    console.log(showName,season,fileName,extension);
-    const videoUrl = `/media/shows/${showName}/Season ${season}/${fileName}${extension}`;
+function playEpisode(title, season, fileName, extension) {
+    console.log(title,season,fileName,extension);
+    const videoUrl = `/media/shows/${title}/Season ${season}/${fileName}${extension}`;
     console.log(videoUrl);
     videoSource.src = videoUrl;
     player.load();
     player.play();
     //seasonInfo.textContent = `Season ${season} • ${fileName}`;
+
+    // set episode to current one in viewing...
+    curEpisode.textContent = fileName;
     
     // get subtitles into track if there are any that match episode name
 
-    videoSubtitles.src = `/media/shows/${showName}/Season ${season}/subs/${fileName}.vtt`;
+    videoSubtitles.src = `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`;
     console.log(videoSubtitles);
 
 }

@@ -169,9 +169,13 @@ video {
     transition: transform 0.2s, background 0.2s;
 }
 
-.episode-card:hover {
+.episode-card:hover{
     transform: scale(1.03);
     background: #2a2a2a;
+}
+
+.episode-card.active{
+    background: #b10710;
 }
 
 .episode-title {

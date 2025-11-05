@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"net/url"
 	"streamy/router"
 
 	"github.com/joho/godotenv"
@@ -44,16 +45,20 @@ func extractSeasonNumber(name string) int {
 // -----------------------------------------
 
 // define type to hold video names...
+// main page where lists of basic strings for titles are used...
 type PageData struct {
 	Movies  []string
 	TVShows []string
 	Other   []string
 }
 
-// current directorys media fileName to stream from that filename in /media
+// ------------------------
+
+// current directory media fileName to stream from that filename in /media
 type MoviePageData struct {
 	Filename  string
 	Extension string
+	router.MetaData
 }
 
 // ------
@@ -69,20 +74,13 @@ type Episode struct {
 }
 
 type ShowPageData struct {
-	ShowName string
-	Content  []SeasonStruct
-	Title    string
-	Released string // first release
-	Year     string
-	Rated    string
-	Genre    string
-	Director string
-	Actors   string
-	Plot     string
-	Poster   string
+	Content []SeasonStruct
+	router.MetaData
 }
 
 // ------------------------------------------
+
+// --------------------------------
 
 // main function
 func main() {
@@ -162,47 +160,72 @@ func main() {
 			return
 		}
 
-		fullName := parts[2]                      // e.g., "movie.mp4"
-		ext := filepath.Ext(fullName)             // ".mp4"
-		name := strings.TrimSuffix(fullName, ext) // "movie"
-		ext = strings.TrimPrefix(ext, ".")        // remove the dot -> "mp4"
+		title := parts[2]                      // e.g., "movie.mp4"
+		ext := filepath.Ext(title)             // ".mp4"
+		name := strings.TrimSuffix(title, ext) // "movie"
+		ext = strings.TrimPrefix(ext, ".")     // remove the dot -> "mp4"
+
+		data := router.GetMovieInfo(title)
+		fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", data.Title, data.Released, data.Actors, data.Plot)
+
+		metaData := router.MetaData{
+			Title:    title,
+			Released: data.Released,
+			Year:     data.Year,
+			Rated:    data.Rated,
+			Genre:    data.Genre,
+			Director: data.Director,
+			Actors:   data.Actors,
+			Plot:     data.Plot,
+			Poster:   data.Poster,
+		}
 
 		moviePage.Execute(w, MoviePageData{
 			Filename:  name,
 			Extension: ext,
+			MetaData:  metaData,
 		})
 	})
 
 	http.HandleFunc("/shows/", func(w http.ResponseWriter, r *http.Request) {
-		// URL path: 
+		// URL path:
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) < 3 || parts[2] == "" {
 			http.Error(w, "Show not specified", http.StatusBadRequest)
 			return
 		}
 
-		series := router.GetSeriesInfo(parts[2])
-		fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", series.Title, series.Released, series.Actors, series.Plot)
+		title, err := url.PathUnescape(parts[2])
+		if err != nil {
+			http.Error(w, "Invalid show name", http.StatusBadRequest)
+			return
+		}
 
-		showName := parts[2]
+		data := router.GetSeriesInfo(title)
+		fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", data.Title, data.Released, data.Actors, data.Plot)
+
+		// showName := parts[2]
+
+		metaData := router.MetaData{
+			Title:    title,
+			Released: data.Released,
+			Year:     data.Year,
+			Rated:    data.Rated,
+			Genre:    data.Genre,
+			Director: data.Director,
+			Actors:   data.Actors,
+			Plot:     data.Plot,
+			Poster:   data.Poster,
+		}
 
 		showData := ShowPageData{
-			ShowName: showName,
-			Title:    series.Title,
-			Released: series.Released,
-			Year:     series.Year,
-			Rated:    series.Rated,
-			Genre:    series.Genre,
-			Director: series.Director,
-			Actors:   series.Actors,
-			Plot:     series.Plot,
-			Poster:   series.Poster,
+			MetaData: metaData,
 		}
 
 		// iterate through season folders and build season objects with string array of episode file names
 		//
 		// Base path to the show's folder
-		basePath := filepath.Join("./media/shows/", showName)
+		basePath := filepath.Join("./media/shows/", title)
 
 		fmt.Println(basePath)
 
