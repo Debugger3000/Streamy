@@ -1,4 +1,7 @@
 
+# Convert english .mkvs to x264, 8 bit, aac encoding for normal browser viewing... still maintains resolution
+
+
 # Ask for output directory
 $outputDir = Read-Host "Enter the output directory (e.g., X:\streamy\media\shows\)"
 if (!(Test-Path $outputDir)) {
