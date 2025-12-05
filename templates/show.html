@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>{{.Title}}</title>
 <link rel="stylesheet" href="/static/showstyles.css">
+<link rel="stylesheet" href="/video-js-8.23.6/video-js.css">
+<script src="/video-js-8.23.6/video.js"></script>
 </head>
 <body>
 <header>
@@ -15,11 +17,30 @@
 
 <!-- Video Player -->
 <div class="video-container">
-    <video id="player" controls autoplay>
+    <!-- <video id="player" controls autoplay>
         <source id="video-source" src="" type="video/mp4">
         <track id="video-subtitle" src="" kind="subtitles" srclang="en" label="English" default>
         Your browser does not support the video tag.
+    </video> -->
+
+
+    <!-- via code -->
+    <video id="my-player" class="video-js vjs-big-play-centered" 
+        controls
+        preload="auto"
+        width="640"
+        height="360"
+        data-setup='{}'
+        poster="{{.Poster}}"
+    >
+        <!-- <source id="video-source" type="video/mp4"> -->
+        <!-- <track id="video-subtitle" kind="subtitles" srclang="en" label="English" default> -->
     </video>
+
+    <!-- <video-js>
+         <source id="video-source" src="" type="video/mp4">
+    </video-js> -->
+
 </div>
 
 <!-- Current playing info -->
@@ -73,9 +94,16 @@
 {{end}}
 
 <script>
-const player = document.getElementById("player");
-const videoSource = document.getElementById("video-source");
-const videoSubtitles = document.getElementById("video-subtitle");
+let player_js;
+
+// watch videojs player and update icon
+//player_js.on('play', () => player.controlBar.playToggle.update());
+//player_js.on('pause', () => player.controlBar.playToggle.update());
+
+
+// const player = document.getElementById("my-player");
+// const videoSource = document.getElementById("video-source");
+//const videoSubtitles = document.getElementById("video-subtitle");
 const seasonInfo = document.getElementById("season-info");
 const curEpisode = document.getElementById("current-episode");
 // const episodeInfo = document.getElementById("episode-info");
@@ -84,9 +112,13 @@ function playEpisode(title, season, fileName, extension) {
     console.log(title,season,fileName,extension);
     const videoUrl = `/media/shows/${title}/Season ${season}/${fileName}${extension}`;
     console.log(videoUrl);
-    videoSource.src = videoUrl;
-    player.load();
-    player.play();
+
+    // Update the player source dynamically
+    player_js.src({ src: videoUrl, type: `video/${extension.replace('.', '')}` });
+    // native way to change video src
+    // videoSource.src = videoUrl;
+    //player_js.load();
+    //player_js.play();
     //seasonInfo.textContent = `Season ${season} • ${fileName}`;
 
     // set episode to current one in viewing...
@@ -94,8 +126,17 @@ function playEpisode(title, season, fileName, extension) {
     
     // get subtitles into track if there are any that match episode name
 
-    videoSubtitles.src = `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`;
-    console.log(videoSubtitles);
+    //videoSubtitles.src = `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`;
+    //console.log(videoSubtitles);
+
+    // player_js.addRemoteTextTrack({
+    //     kind: 'subtitles',
+    //     src: `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`,
+    //     srclang: 'en',
+    //     label: 'English',
+    //     default: true
+    //     }, true);
+
 
 }
 
@@ -124,6 +165,34 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// Wait until the script loads
+document.addEventListener('DOMContentLoaded', () => {
+    player_js = videojs('my-player', {
+        autoplay: true,
+        controls: true,
+        loop: false,
+        fluid: true,
+        controlBar: {
+            skipButtons: {
+                forward: 10,
+                backward: 10
+            }
+        }
+    });
+
+    // player_js.on("pause", function () {
+    //     player_js.controlBar.playToggle.removeClass('vjs-playing');
+    //     player_js.controlBar.playToggle.addClass('vjs-paused');
+    // });
+    //   player_js.on("play", function () {
+    //     player_js.controlBar.playToggle.removeClass('vjs-paused');
+    //     player_js.controlBar.playToggle.addClass('vjs-playing');
+    // });
+
+
+  });
+
 </script>
 </body>
 </html>

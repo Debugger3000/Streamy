@@ -111,6 +111,11 @@ func main() {
 	moviePage := template.Must(template.ParseFiles("./templates/movie.html")) // // serve movie html template
 	showPage := template.Must(template.ParseFiles("./templates/show.html"))
 
+	// serve video js file
+	// Serve the video-js folder at /video-js-8.23.6
+	video_js := http.FileServer(http.Dir("./video-js-8.23.6"))
+	http.Handle("/video-js-8.23.6/", http.StripPrefix("/video-js-8.23.6/", video_js))
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		// Read files from media folder
