@@ -1,3 +1,14 @@
+
+
+:root {
+  --primary-color: #4f46e5;
+  --tab-height: 48px;
+  --gap: 1rem;
+  --large-marg: 20%;
+  --medium-marg: 5%;
+  --phone-marg: 10px;
+}
+
 body {
     background-color: #121212;
     color: #E0E0E0;
@@ -43,18 +54,25 @@ header nav a:hover {
     justify-content: center; */
     /* margin-bottom: 10px;
     margin-top: 50px; */
-    margin: 50px 50px 10px 50px;
+    /* width: 100%; */
+    height: 360px;
+    margin: 50px var(--large-marg) 10px var(--large-marg);
     /* height: 500px; */
     box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* Optional: subtle shadow */
 }
 
 video {
-    width: 80%;
+    /* width: 80%; */
     border-radius: 10px;
     outline: none;
     height: 500px;
 }
 
+#my-player {
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
 
 
 
@@ -65,16 +83,19 @@ video {
 .current-info {
     color: #FFFFFF;
     font-size: 1em;
-    margin: 5px 10% 15px 10%;
+    margin: 5px var(--large-marg) 15px var(--large-marg);
     display: flex;
-    flex-direction: row;
+    align-items: flex-start; 
 
 }
 
 
 #poster-container {
+    /* float: left; */
     height: 250px;
     width: 150px;
+    min-height: 250px;
+    min-width: 150px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7),   /* dark shadow */
               0 0 15px rgba(255, 255, 255, 0.05); /* subtle highlight */
 }
@@ -87,7 +108,7 @@ video {
 }
 
 #show-info {
-    margin: 0px 0px 0px 1em;
+    margin: 0px 0px 0px 10px;
 }
 
 #show-title {
@@ -99,6 +120,10 @@ video {
     margin: 5px 0 5px 0;
     font-weight: 400;
 }
+
+/* #ratings{
+    white-space: nowrap;
+} */
 
 .row{
     display: flex;
@@ -121,24 +146,28 @@ video {
 
 
 /* Season tabs */
+
+#season-tabs-container{
+    margin: 0px var(--large-marg) 20px var(--large-marg);
+}
 .tab-bar {
+    width: 100%;
     display: flex;
     gap: 10px;
-    margin-left: 10%;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    overflow-x: auto;
 }
 
 .tab {
     background: #1E1E1E;
     border: none;
     border-radius: 6px;
-    padding: 8px 14px;      /* slightly bigger padding for balance */
+    padding: 8px 14px;     
     color: #E0E0E0;
     cursor: pointer;
     font-weight: bold;
     font-size: 1.1em;       /* <-- bigger text */
     transition: background 0.2s ease;
+    white-space: nowrap;
 }
 
 .tab:hover, .tab.active {
@@ -150,9 +179,10 @@ video {
 /* Episodes cards */
 .episodes {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     /* width: 100%; */
-    margin: 5px 10% 15px 10%;
+    margin: 5px var(--large-marg) 15px var(--large-marg);
     /* flex-wrap: wrap; */
     gap: 15px;
     margin-bottom: 50px;
@@ -164,7 +194,7 @@ video {
     align-items: center;
     background: #1E1E1E;
     border-radius: 10px;
-    width: 200px;
+    /* width: 200px; */
     padding: 20px 10px;
     cursor: pointer;
     transition: transform 0.2s, background 0.2s;
@@ -184,3 +214,139 @@ video {
     color: #fdfdfd;
     text-align: center;
 }
+
+
+
+
+/* media shit forget the name */
+
+/* 768px and smaller */
+@media (max-width: 1000px) {
+  /* styles for tablets & smaller */
+    header {
+        padding: 10px 10px;
+    }
+
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    header nav a {
+        margin-left: 15px;
+        font-size: 1em;
+        /* color: purple; */
+    }
+
+    .video-container {
+        margin: 10px 0px 10px 0px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* Optional: subtle shadow */
+    }
+
+    video {
+        width: 100%;
+        height: 360px;
+    }
+
+    .current-info {
+        margin: 5px var(--phone-marg) 15px var(--phone-marg);
+    }
+
+    .tab {
+       padding: 12px 16px;  
+    }
+
+    #season-tabs-container{
+        margin: 0px var(--phone-marg) 15px var(--phone-marg);
+    }
+
+
+    #poster-container {
+        min-height: 150px;
+        min-width: 100px;
+        height: 200px;
+    }
+/* 
+    #poster {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    } */
+
+    .season-info {
+        font-size: 14px;
+    }
+
+    .episodes {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        /* width: 100%; */
+        margin: 5px var(--phone-marg) 15px var(--phone-marg);
+        gap: 5px;
+    }
+
+    #show-info {
+        margin: 0px 0px 0px 10px;
+        height: 250px;
+        overflow-y: auto;
+    }
+    /*
+    #poster-container {
+        display: none;
+    }
+
+    #poster {
+        width: 100%;
+        height: 100%;
+        display: none;
+    } */
+
+}
+
+
+
+/* 
+@media (max-width: 1050px) {
+    header {
+        padding: 10px 10px;
+    }
+
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    header nav a {
+        margin-left: 15px;
+        font-size: 1em;
+    }
+
+    .video-container {
+        margin: 50px 0px 10px 0px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5); 
+    }
+
+    video {
+        width: 100%;
+        height: 360px;
+    }
+
+    .current-info {
+        margin: 5px var(--medium-marg) 15px var(--medium-marg);
+    }
+
+    .tab-bar {
+        width: 100%;
+        margin: 0px var(--medium-marg) 15px var(--medium-marg);
+    }
+
+
+
+    .episodes {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        margin: 5px var(--medium-marg) 15px var(--medium-marg);
+        gap: 15px;
+    }
+
+} */
