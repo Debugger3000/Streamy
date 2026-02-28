@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="/static/showstyles.css">
 <link rel="stylesheet" href="/video-js-8.23.6/video-js.css">
 <script src="/video-js-8.23.6/video.js"></script>
+<!-- <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/videojs-vtt-support@2.0.1/dist/videojs-vtt-support.min.js"></script> -->
 </head>
 <body>
 <header>
@@ -37,11 +40,6 @@
         <!-- <source id="video-source" type="video/mp4"> -->
         <!-- <track id="video-subtitle" kind="subtitles" srclang="en" label="English" default> -->
     </video>
-
-    <!-- <video-js>
-         <source id="video-source" src="" type="video/mp4">
-    </video-js> -->
-
 </div>
 
 <!-- Current playing info -->
@@ -103,7 +101,7 @@
 {{end}}
 
 <script>
-let player_js;
+let player_js; // global reference to the video source
 
 // watch videojs player and update icon
 //player_js.on('play', () => player.controlBar.playToggle.update());
@@ -138,9 +136,37 @@ function playEpisode(title, season, fileName, extension) {
     //videoSubtitles.src = `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`;
     //console.log(videoSubtitles);
 
+    var subtitleFileName = fileName;
+    const regex = /S\d+E\d+/i;
+    const match = subtitleFileName.match(regex);  
+    
+    if (match) {
+        const seasonEpisode = match[0]; // This will be "S01E12"
+        console.log("Extracted:", seasonEpisode);
+
+        // Get all current remote text tracks
+        const oldTracks = player_js.remoteTextTracks();
+        // loop through and remove all
+        let i = oldTracks.length;
+        while (i--) {
+            player_js.removeRemoteTextTrack(oldTracks[i]);
+        }
+
+        // add subtitle track...
+        player_js.addRemoteTextTrack({
+        kind: 'subtitles',
+        src: `/media/shows/${title}/Season ${season}/subs/${seasonEpisode}.vtt`,
+        srclang: 'en',
+        label: 'English',
+        default: true
+        }, true);
+    } else {
+        console.warn("No S##E## pattern found in filename.");
+    }
+
     // player_js.addRemoteTextTrack({
     //     kind: 'subtitles',
-    //     src: `/media/shows/${title}/Season ${season}/subs/${fileName}.vtt`,
+    //     src: `/media/shows/${title}/Season ${season}/${fileName}.vtt`,
     //     srclang: 'en',
     //     label: 'English',
     //     default: true
@@ -183,24 +209,27 @@ document.addEventListener('DOMContentLoaded', () => {
         loop: false,
         fluid: true,
         controlBar: {
+            // audioTrackButton,
             skipButtons: {
                 forward: 10,
                 backward: 10
-            }
+            },
         }
     });
 
-    // player_js.on("pause", function () {
-    //     player_js.controlBar.playToggle.removeClass('vjs-playing');
-    //     player_js.controlBar.playToggle.addClass('vjs-paused');
-    // });
-    //   player_js.on("play", function () {
-    //     player_js.controlBar.playToggle.removeClass('vjs-paused');
-    //     player_js.controlBar.playToggle.addClass('vjs-playing');
-    // });
+    var subtitleFileName = fileName
 
-
-  });
+    // Add the subtitle track dynamically
+    // player_js.addRemoteTextTrack({
+    //     kind: 'subtitles',
+    //     // path + subtitle filename
+    //     src: `/media/shows/${title}/Season ${season}/${fileName}.vtt`,
+    //     //src: '/path/to/your/subtitles.vtt', // The file path you mentioned you'd handle
+    //     srclang: 'en',
+    //     label: 'English',
+    //     default: true // Set to true if you want them on by default
+    // }, false);
+});
 
 </script>
 </body>

@@ -135,6 +135,7 @@ func main() {
 		// get shows...
 		tvEntries, err := os.ReadDir("./media/shows")
 		if err != nil {
+			fmt.Printf("unable to get show data...")
 			http.Error(w, "Unable to read media folder", http.StatusInternalServerError)
 			return
 		}
@@ -207,7 +208,7 @@ func main() {
 		}
 
 		data := router.GetSeriesInfo(title)
-		fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", data.Title, data.Released, data.Actors, data.Plot)
+		//fmt.Printf("Title: %s\nReleased: %s\nActors: %s\nPlot: %s\n", data.Title, data.Released, data.Actors, data.Plot)
 
 		// showName := parts[2]
 
@@ -247,6 +248,7 @@ func main() {
 				seasonPath := filepath.Join(basePath, seasonName)
 
 				// Read all episodes in this season
+				// will need
 				episodeFiles, err := os.ReadDir(seasonPath)
 				if err != nil {
 					continue // skip this season if there's an error
@@ -263,6 +265,10 @@ func main() {
 						episodeSingle.Extension = ext
 						episodeSingle.FileName = nameNoExt
 						episodes = append(episodes, episodeSingle)
+
+						// read subtitle tracks as well if there are any...
+						// match via "S01E01" tags...
+
 					}
 				}
 

@@ -1,0 +1,15 @@
+# Get all .srt files in the current folder
+$files = Get-ChildItem *.srt
+
+foreach ($file in $files) {
+    # Define the new filename (replace .srt with .vtt)
+    $outputName = $file.BaseName + ".vtt"
+    
+    Write-Host "Converting: $($file.Name) -> $outputName" -ForegroundColor Cyan
+    
+    # Run ffmpeg (assumes ffmpeg is in your System PATH)
+    ffmpeg -i "$($file.FullName)" "$outputName" -y
+}
+
+Write-Host "Done! All subtitles converted." -ForegroundColor Green
+pause

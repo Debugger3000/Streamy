@@ -2,6 +2,10 @@
 # Convert english .mkvs to x264, 8 bit, aac encoding for normal browser viewing... still maintains resolution
 
 
+#si=0 (Stream 0:3): Signs & Songs (Mostly intro/outro text).
+#si=1 (Stream 0:4): Dialogue (Non-Honorifics).
+#si=2 (Stream 0:5): Dialogue (Honorifics) — This is what you want.
+
 # audio Notes:
 	# EAC3 - audio has 6 channels
 	# If i try to conver to AAC (2 channels) it silently fails.
@@ -58,35 +62,38 @@ if (!(Test-Path $outputDir)) {
 $files = Get-ChildItem -Path . -Filter *.mkv -File
 
 foreach ($file in $files) {
-    # Match pattern like S01E04 (one letter, two digits, one letter, two digits)
     if ($file.Name -match $finalRegex) {
         $episodeCode = $matches[0]
-
-        # Set output filename
         $outputFile = Join-Path $outputDir "$episodeCode.mp4"
 
         Write-Host "New file name is: '$episodeCode'..."
-        Write-Host "Converting '$($file.Name)' to '$outputFile'..."
+        Write-Host "Converting '$($file.Name)' to '$outputFile' with Jap Audio + Eng Subs..."
 
-        # FFmpeg command as argument array
+        # Format the file path specifically for the FFmpeg subtitle filter
+        # It needs forward slashes and the colon escaped: C\: /Path/To/File.mkv
+        $subPath = $file.FullName.Replace("\", "/").Replace(":", "\:")
+
         $ffmpegArgs = @(
             "-i", $file.FullName,
-	    #"-map", "0:v:0",
-	    #"-map", "0:a:1",
+            "-map", "0:0",                 # Take Video
+            "-map", "0:1",                 # Take Japanese Audio (Stream #0:2)
+            "-vf", "subtitles='$subPath':si=0",    
+# Burn in Stream #0:4 (full dialogue) (defaults to first sub stream) ( guide to whatever one we want) ex: `si=2` = second subtitle track
             "-c:v", "libx264",
             "-pix_fmt", "yuv420p",
             "-c:a", "aac",
             "-b:a", "128k",
+            "-ac", "2",
+            "-f", "mp4",
             "-preset", "fast",
-	    "-ac", "2"
+            "-y",                            # Overwrite output file if it exists
             $outputFile
         )
 
-        # Run FFmpeg and show its output in this same PowerShell window
         & ffmpeg @ffmpegArgs
     }
     else {
-        Write-Host "Skipping '$($file.Name)': filename does not match episode pattern."
+        Write-Host "Skipping '$($file.Name)': filename does not match pattern."
     }
 }
 
